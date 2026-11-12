@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr" data-tone="neutral">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BUILDR">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#efe7e1">
+<title>BUILDR — Programme Musculation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Doto:wght@600;800&display=swap" rel="stylesheet">
+<style>
+@property --a1 { syntax: '<color>'; inherits: true; initial-value: #d9d2da; }
+@property --a2 { syntax: '<color>'; inherits: true; initial-value: #efe2d6; }
+@property --a3 { syntax: '<color>'; inherits: true; initial-value: #cfd6df; }
+
+:root {
+  --bg: #efe7e1;
+  --ink: #1b1613;
+  --ink-2: #6e625a;
+  --cream: #fff3bf;
+  --a1: #d9d2da; --a2: #efe2d6; --a3: #cfd6df;
+  --radius: 34px;
+  --ease: cubic-bezier(.2,.9,.25,1);
+  transition: --a1 1.2s ease, --a2 1.2s ease, --a3 1.2s ease;
+}
+html[data-tone="safe"]     { --a1:#bfe2cb; --a2:#eef3cf; --a3:#a9d3d6; }
+html[data-tone="moderate"] { --a1:#ffd9a6; --a2:#fff0c4; --a3:#f6c1a4; }
+html[data-tone="intense"]  { --a1:#ffb5a8; --a2:#f2c0dc; --a3:#ffd2b0; }
+html[data-tone="danger"]   { --a1:#e7a3b2; --a2:#cbb3e2; --a3:#f2a6a0; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed; inset: -20%;
+  background:
+    radial-gradient(40% 35% at 15% 10%, var(--a1), transparent 70%),
+    radial-gradient(45% 40% at 90% 30%, var(--a2), transparent 70%),
+    radial-gradient(50% 40% at 40% 95%, var(--a3), transparent 70%);
+  filter: blur(20px);
+  z-index: 0;
+  pointer-events: none;
+}
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; text-align: left; }
+
+.shell {
+  position: relative; z-index: 1;
+  max-width: 440px; margin: 0 auto;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 76px) 18px calc(env(safe-area-inset-bottom) + 120px);
+}
+
+/* ── HEADER ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding: calc(env(safe-area-inset-top) + 12px) 18px 10px;
+  display: flex; justify-content: center;
+}
+.topbar-inner { width: 100%; max-width: 404px; display: flex; align-items: center; justify-content: space-between; }
+.round {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.45);
+  border: 1px solid rgba(255,255,255,.7);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 6px 20px -8px rgba(60,35,25,.25), inset 0 1px 0 rgba(255,255,255,.8);
+  transition: transform .2s var(--ease);
+}
+.round:active { transform: scale(.92); }
+.round svg { width: 20px; height: 20px; stroke: var(--ink); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.brand { font-weight: 800; letter-spacing: -.02em; font-size: 1.05rem; }
+.brand span { opacity: .45; font-weight: 600; }
+.hidden { visibility: hidden; }
+
+/* ── GLASS ── */
+.glass {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -20px 40px -20px rgba(0,0,0,.12),
+    0 24px 50px -24px rgba(70,35,25,.45);
+  backdrop-filter: blur(26px) saturate(170%);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  color: #fff;
+}
+.glass::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(140deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 38%),
+    linear-gradient(0deg, rgba(20,10,10,.14), transparent 55%);
+}
+.blob { position: absolute; border-radius: 50%; filter: blur(34px); z-index: -2; pointer-events: none; }
+.b1 { width: 85%; height: 110%; left: -25%; top: -35%; background: var(--c1); animation: drift1 14s ease-in-out infinite; }
+.b2 { width: 75%; height: 95%; right: -25%; top: -10%; background: var(--c2); animation: drift2 17s ease-in-out infinite; }
+.b3 { width: 80%; height: 90%; left: 15%; bottom: -45%; background: var(--c3); animation: drift3 20s ease-in-out infinite; }
+@keyframes drift1 { 50% { transform: translate(18%, 12%) scale(1.1); } }
+@keyframes drift2 { 50% { transform: translate(-15%, 18%) scale(.9); } }
+@keyframes drift3 { 50% { transform: translate(-12%, -14%) scale(1.15); } }
+
+.t-safe     { --c1:#3d9d7e; --c2:#b9e09c; --c3:#2a7a90; }
+.t-moderate { --c1:#ee9640; --c2:#ffd56f; --c3:#d0654a; }
+.t-intense  { --c1:#e9535c; --c2:#c23b8d; --c3:#f59a5f; }
+.t-danger   { --c1:#8d1b3b; --c2:#4c1d74; --c3:#e1383d; }
+.t-neutral  { --c1:#8a8597; --c2:#cdbcae; --c3:#69798e; }
+
+/* ── TYPO ── */
+.eyebrow { font-size: .78rem; font-weight: 600; color: var(--ink-2); letter-spacing: .01em; margin-bottom: 10px; }
+.h1 { font-size: clamp(2.5rem, 11vw, 3.2rem); font-weight: 800; letter-spacing: -.045em; line-height: .95; margin-bottom: 14px; }
+.lead { color: var(--ink-2); font-size: .98rem; line-height: 1.5; margin-bottom: 26px; max-width: 34ch; }
+.dots { font-family: 'Doto', monospace; font-weight: 800; letter-spacing: .02em; }
+
+/* ── STEPS ── */
+.steps { display: flex; gap: 10px; margin-bottom: 26px; }
+.step {
+  flex: 1; aspect-ratio: 1; max-width: 76px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: .62rem; font-weight: 600; line-height: 1.15;
+  --radius: 50%;
+}
+.step .dots { font-size: 1.35rem; }
+.step.todo { background: rgba(255,255,255,.35); color: var(--ink-2); border: 1px solid rgba(255,255,255,.6); }
+.step.now { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* ── CARDS ── */
+.stack { display: grid; gap: 14px; }
+.card {
+  display: block; width: 100%; padding: 22px 22px 24px; min-height: 168px;
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.card:active { transform: scale(.975); }
+@media (hover:hover) { .card:hover { transform: translateY(-3px); } }
+.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+.chip {
+  font-size: .74rem; font-weight: 600; padding: 7px 13px; border-radius: 99px;
+  background: rgba(255,255,255,.22); border: 1px solid rgba(255,255,255,.4);
+}
+.meta { font-size: .78rem; opacity: .85; }
+.card h3 { font-size: 2rem; font-weight: 800; letter-spacing: -.04em; line-height: .98; margin-bottom: 10px; text-shadow: 0 2px 16px rgba(0,0,0,.12); }
+.card p { font-size: .88rem; line-height: 1.45; opacity: .92; max-width: 32ch; }
+.card .go {
+  position: absolute; right: 18px; bottom: 18px; width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,.25); border: 1px solid rgba(255,255,255,.45);
+  display: grid; place-items: center;
+}
+.card .go svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.inset {
+  border-radius: 24px; padding: 14px 16px;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28);
+}
+
+/* ── INFO ── */
+.note {
+  margin-top: 18px; padding: 18px 20px; border-radius: 26px;
+  background: rgba(255,255,255,.42); border: 1px solid rgba(255,255,255,.7);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  font-size: .86rem; line-height: 1.55; color: #43382f;
+}
+.note b { color: var(--ink); }
+.note .tag { display: block; font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 6px; }
+
+/* ── DOCK / CTA ── */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  padding: 0 18px calc(env(safe-area-inset-bottom) + 18px);
+  display: flex; justify-content: center; pointer-events: none;
+}
+.dock-inner {
+  pointer-events: auto; width: 100%; max-width: 404px;
+  display: flex; gap: 10px; align-items: center; padding: 8px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.7);
+  backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: 0 18px 40px -18px rgba(60,35,25,.4), inset 0 1px 0 rgba(255,255,255,.8);
+}
+.pill {
+  flex: 1; height: 58px; border-radius: 99px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--cream); color: var(--ink);
+  font-weight: 700; font-size: 1rem; letter-spacing: -.01em;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 6px 16px -6px rgba(140,110,30,.45);
+  transition: transform .2s var(--ease);
+}
+.pill:active { transform: scale(.96); }
+.pill svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dock .round { flex: none; width: 58px; height: 58px; }
+
+/* ── HERO ── */
+.hero { padding-top: 6vh; }
+.wordmark { font-size: clamp(4.6rem, 25vw, 6.6rem); font-weight: 800; letter-spacing: -.065em; line-height: .85; margin-bottom: 18px; }
+.wordmark i { font-style: normal; display: inline-block; padding: 0 .12em 0 .02em; margin-right: -.12em; letter-spacing: 0; background: linear-gradient(120deg, #e9535c, #ee9640 45%, #3d9d7e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 30px 0 18px; }
+.tile { aspect-ratio: .78; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; --radius: 28px; }
+.tile .dots { font-size: 2rem; line-height: 1; }
+.tile small { font-size: .7rem; font-weight: 600; opacity: .9; }
+
+/* ── RPE ── */
+.rpe-bars { display: flex; gap: 5px; align-items: flex-end; height: 92px; margin: 8px 0 8px; }
+.rpe-bar { flex: 1; border-radius: 10px; position: relative; transition: opacity .4s, transform .4s var(--ease); }
+.rpe-bar.off { opacity: .22; }
+.rpe-bar.on { box-shadow: 0 0 0 1.5px rgba(255,255,255,.9); }
+.rpe-n { display: flex; gap: 5px; }
+.rpe-n span { flex: 1; text-align: center; font-size: .72rem; opacity: .85; }
+
+/* ── STATS ── */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+.stat { text-align: left; }
+.stat .k { font-size: .7rem; opacity: .85; margin-bottom: 4px; }
+.stat .v { font-size: 1.5rem; line-height: 1; }
+
+/* ── PROGRAM ── */
+.day { padding: 0; min-height: 0; }
+.day-head { width: 100%; display: flex; align-items: center; gap: 14px; padding: 20px 20px; color: #fff; }
+.day-head .dots { font-size: 1.6rem; line-height: 1; min-width: 52px; }
+.day-head .nm { flex: 1; font-weight: 700; font-size: .98rem; letter-spacing: -.01em; line-height: 1.25; }
+.day-head .chev { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; transition: transform .35s var(--ease); }
+.day-head .chev svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.day.open .chev { transform: rotate(180deg); }
+.day-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease); }
+.day.open .day-body { grid-template-rows: 1fr; }
+.day-body > div { overflow: hidden; }
+.ex-list { display: grid; gap: 8px; padding: 0 14px 16px; }
+.ex { display: grid; grid-template-columns: 30px 1fr auto; gap: 4px 10px; align-items: center; }
+.ex .l { font-weight: 800; font-size: .85rem; opacity: .9; }
+.ex .n { font-weight: 600; font-size: .9rem; line-height: 1.25; }
+.ex .r { grid-column: 2 / 4; display: flex; justify-content: space-between; align-items: center; }
+.ex .r .dots { font-size: 1.05rem; }
+.ex .r em { font-style: normal; font-size: .72rem; padding: 4px 9px; border-radius: 99px; background: rgba(255,255,255,.22); }
+
+.center { text-align: center; }
+.big-emoji { font-size: 3.4rem; margin-bottom: 14px; display: block; }
+
+.screen { animation: enter .55s var(--ease) both; }
+@keyframes enter { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } }
+.stack > * { animation: enter .6s var(--ease) both; }
+.stack > *:nth-child(2) { animation-delay: .06s; }
+.stack > *:nth-child(3) { animation-delay: .12s; }
+.stack > *:nth-child(4) { animation-delay: .18s; }
+.stack > *:nth-child(5) { animation-delay: .24s; }
+.stack > *:nth-child(6) { animation-delay: .30s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="round" id="backBtn" onclick="back()" aria-label="Retour">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="brand">BUILDR<span>.</span></div>
+    <button class="round" id="resetBtn" onclick="restart()" aria-label="Recommencer">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="shell"><div id="screen"></div></main>
+
+<div class="dock" id="dock"></div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────
+const S = { level: null, volume: null, split: null, frequency: null };
+let stack = [];
+let current = 'hero';
+
+const LV = {
+  beginner:     { label: 'Débutant',      tone: 'safe' },
+  intermediate: { label: 'Intermédiaire', tone: 'moderate' },
+  advanced:     { label: 'Avancé',        tone: 'intense' },
+};
+const VOL = {
+  low:    { label: '8–10',  r: [8, 10],  sets: '2–3', tone: 'safe' },
+  medium: { label: '12–16', r: [12, 16], sets: '3–5', tone: 'moderate' },
+  high:   { label: '18–20', r: [18, 20], sets: '4–6', tone: 'intense' },
+};
+const SPLIT = { fullbody: 'Full Body', upperlower: 'Haut / Bas', ppl: 'Push / Pull / Legs' };
+
+const ICON = {
+  arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  chev:  '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
+  spark: '<svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg>',
+  reset: '<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
+  back:  '<svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
+};
+
+const levelTone = () => (S.level && LV[S.level]) ? LV[S.level].tone : 'neutral';
+const blobs = '<span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>';
+
+// ─── NAV ──────────────────────────────────────────────
+function go(id) { stack.push(current); current = id; render(); }
+function back() {
+  if (!stack.length) return;
+  current = stack.pop(); render();
+}
+function restart() {
+  Object.keys(S).forEach(k => S[k] = null);
+  stack = []; current = 'level'; render();
+}
+
+// ─── SAUVEGARDE ───────────────────────────────────────
+const KEY = 'buildr-state-v1';
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify({ S, stack, current })); } catch (e) {}
+}
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY));
+    if (!d || !SCREENS[d.current]) return;
+    Object.assign(S, d.S || {});
+    stack = Array.isArray(d.stack) ? d.stack : [];
+    current = d.current;
+    const need = { volume: ['level'], volume_warning: ['level','volume'], split: ['level','volume'],
+                   frequency: ['level','volume','split'], rpe: ['level','volume','split','frequency'],
+                   program: ['level','volume','split','frequency'] }[current] || [];
+    if (need.some(k => !S[k])) { Object.keys(S).forEach(k => S[k] = null); stack = []; current = 'hero'; }
+  } catch (e) {}
+}
+
+function render() {
+  if (!SCREENS[current]) current = 'hero';
+  save();
+  const fn = SCREENS[current];
+  const html = fn();
+  const el = document.getElementById('screen');
+  el.innerHTML = `<div class="screen">${html}</div>`;
+  document.getElementById('dock').innerHTML = DOCKS[current] ? DOCKS[current]() : '';
+  document.getElementById('backBtn').classList.toggle('hidden', current === 'hero' || !stack.length);
+  document.getElementById('resetBtn').classList.toggle('hidden', current === 'hero');
+  const tones = { arnold: 'danger', game_over: 'danger', volume_warning: 'moderate' };
+  document.documentElement.dataset.tone = tones[current] || (current === 'hero' ? 'neutral' : levelTone());
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+// ─── COMPONENTS ───────────────────────────────────────
+function card({ tone, chip, meta = '', title, desc, on }) {
+  return `
+    <button class="glass card t-${tone}" onclick="${on}">
+      ${blobs}
+      <div class="card-top"><span class="chip">${chip}</span><span class="meta">${meta}</span></div>
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      <span class="go">${ICON.arrow}</span>
+    </button>`;
+}
+
+function steps(active) {
+  const names = ['Niveau', 'Volume', 'Split', 'Fréq.'];
+  const t = levelTone();
+  return `<div class="steps">${names.map((n, i) => {
+    const idx = i + 1;
+    if (idx <= active) {
+      return `<div class="glass step t-${t} ${idx === active ? 'now' : ''}">${blobs}<span class="dots">0${idx}</span>${n}</div>`;
+    }
+    return `<div class="step todo"><span class="dots">0${idx}</span>${n}</div>`;
+  }).join('')}</div>`;
+}
+
+function note(tag, html) {
+  return `<div class="note"><span class="tag">${tag}</span>${html}</div>`;
+}
+
+function dockPill(label, on, icon = ICON.arrow, extra = '') {
+  return `<div class="dock-inner">${extra}<button class="pill" onclick="${on}">${label} ${icon}</button></div>`;
+}
+
+// ─── SCREENS ──────────────────────────────────────────
+const SCREENS = {
+
+  hero() {
+    return `
+      <section class="hero">
+        <div class="eyebrow">Créateur de programme musculation</div>
+        <div class="wordmark">BUILD<i>R</i></div>
+        <p class="lead">Réponds à 4 questions et obtiens un programme construit pour ton niveau — volume, split, fréquence et intensité.</p>
+        <div class="tiles">
+          <div class="glass tile t-safe">${blobs}<span class="dots">01</span><small>Débutant</small></div>
+          <div class="glass tile t-moderate">${blobs}<span class="dots">02</span><small>Intermédiaire</small></div>
+          <div class="glass tile t-intense">${blobs}<span class="dots">03</span><small>Avancé</small></div>
+        </div>
+        ${note('Comment ça marche', 'Chaque couleur correspond à un niveau d\'exigence. <b>Vert</b> = zone sûre, <b>ambre</b> = progression, <b>corail</b> = intense, <b>pourpre</b> = danger.')}
+      </section>`;
+  },
+
+  level() {
+    return `
+      ${steps(1)}
+      <div class="eyebrow">Étape 1 — Expérience</div>
+      <h1 class="h1">Quel est<br>ton niveau ?</h1>
+      <p class="lead">Sois honnête — choisir le mauvais niveau mène à la blessure ou à la stagnation.</p>
+      <div class="stack">
+        ${card({ tone: 'safe', chip: 'Zone sûre', meta: '0–6 mois', title: 'Débutant', desc: 'Tu découvres la musculation. Apprentissage technique, bases solides.', on: "pickLevel('beginner')" })}
+        ${card({ tone: 'moderate', chip: 'En progression', meta: '6–24 mois', title: 'Intermédiaire', desc: 'Entraînement régulier, technique maîtrisée, tu construis de la vraie force.', on: "pickLevel('intermediate')" })}
+        ${card({ tone: 'intense', chip: 'Élite', meta: '2 ans +', title: 'Avancé', desc: 'Tu périodises, tu suis tes charges et tu chasses les records.', on: "pickLevel('advanced')" })}
+        ${card({ tone: 'danger', chip: 'T\'es sûr ?', meta: '7× Mr. Olympia', title: 'Arnold', desc: '6 jours par semaine, 2 séances par jour. Vraiment ?', on: "pickLevel('arnold')" })}
+      </div>`;
+  },
+
+  arnold() {
+    return `
+      <div class="glass card t-danger center" style="padding:40px 24px 36px;min-height:0">
+        ${blobs}
+        <span class="big-emoji">💀</span>
+        <h3 style="font-size:2.6rem">Sans blague.</h3>
+        <p style="margin:12px auto 0">Arnold s'entraînait deux fois par jour, 6 jours sur 7. À ton niveau actuel, ça te détruirait.</p>
+      </div>
+      ${note('À savoir', 'Les volumes des champions sont le résultat de <b>dizaines d\'années</b> d\'adaptation. Le meilleur programme est celui que ton corps peut récupérer.')}`;
+  },
+
+  volume() {
+    const beg = S.level === 'beginner';
+    return `
+      ${steps(2)}
+      <div class="eyebrow">Étape 2 — Volume hebdomadaire</div>
+      <h1 class="h1">Séries par<br>muscle / sem.</h1>
+      <p class="lead">Plus n'est pas toujours mieux — surtout à ton niveau.</p>
+      <div class="stack">
+        ${card({ tone: 'safe', chip: 'Recommandé', meta: 'Faible', title: '8–10 séries', desc: 'Volume minimal efficace. Idéal pour débuter ou récupérer.', on: "pickVolume('low')" })}
+        ${card({ tone: beg ? 'intense' : 'moderate', chip: beg ? '⚠ Risqué' : 'Bon choix', meta: 'Modéré', title: '12–16 séries', desc: 'Plage d\'hypertrophie modérée. Bon équilibre stimulus / récupération.', on: "pickVolume('medium')" })}
+        ${card({ tone: beg ? 'danger' : 'intense', chip: beg ? '🚨 Blessure' : 'Avancé', meta: 'Élevé', title: '18–20 séries', desc: 'Stimulus maximal. Exige sommeil, nutrition et récupération irréprochables.', on: "pickVolume('high')" })}
+      </div>
+      ${note('À savoir', 'Choisis le volume <b>avant</b> le split. Commence prudemment — tu pourras toujours augmenter.')}`;
+  },
+
+  volume_warning() {
+    const high = S.volume === 'high';
+    return `
+      <div class="eyebrow">Attention</div>
+      <h1 class="h1">${high ? 'Risque de<br>blessure' : 'Choix<br>risqué'}</h1>
+      <p class="lead">Ton corps n'est pas encore adapté à <b>${high ? '18–20' : '12–16'} séries par muscle</b>. Les débutants se blessent rarement en soulevant lourd — plutôt en faisant trop, trop tôt.</p>
+      <div class="stack">
+        ${card({ tone: 'safe', chip: 'Recommandé', title: 'Choix intelligent', desc: 'Commencer à 8–10 séries et construire les bases.', on: "dangerChoice('safe')" })}
+        ${card({ tone: 'danger', chip: 'J\'accepte le risque', title: 'No pain, no gain', desc: 'Je continue quand même. Je sais ce que je fais.', on: "dangerChoice('ignore')" })}
+      </div>`;
+  },
+
+  game_over() {
+    return `
+      <div class="glass card t-danger center" style="padding:40px 24px 36px;min-height:0">
+        ${blobs}
+        <span class="big-emoji">🏥</span>
+        <h3 style="font-size:2.4rem">Blessé &amp;<br>hors jeu</h3>
+        <p style="margin:12px auto 0">Tes tendons, articulations et ton système nerveux n'étaient pas prêts pour ce volume.</p>
+      </div>
+      ${note('À savoir', 'Le stress s\'accumule plus vite que la récupération : tendinites, déchirures, fractures de fatigue. <b>Commence bas, progresse lentement.</b>')}`;
+  },
+
+  split() {
+    const t = levelTone();
+    return `
+      ${steps(3)}
+      <div class="eyebrow">Étape 3 — Organisation</div>
+      <h1 class="h1">Comment<br>tu t'organises ?</h1>
+      <p class="lead">La façon de répartir ton volume sur la semaine.</p>
+      <div class="stack">
+        ${card({ tone: 'safe', chip: 'Idéal débutants', meta: '2–3 séances', title: 'Full Body', desc: 'Tout le corps à chaque séance. Fréquence optimale, efficace si tu manques de temps.', on: "pickSplit('fullbody')" })}
+        ${card({ tone: 'moderate', chip: 'Polyvalent', meta: '4+ séances', title: 'Haut / Bas', desc: 'Alternance haut du corps et bas du corps. Volume et fréquence équilibrés.', on: "pickSplit('upperlower')" })}
+        ${card({ tone: 'intense', chip: 'Structuré', meta: '3–6 séances', title: 'Push / Pull / Legs', desc: 'Poussée, tirage, jambes. Plus de spécialisation par séance.', on: "pickSplit('ppl')" })}
+      </div>
+      ${note('À savoir', 'Le <b>volume total hebdomadaire</b> compte plus que le type de split.')}`;
+  },
+
+  frequency() {
+    const v = S.volume, sp = S.split;
+    let opts = [];
+    if (sp === 'fullbody') {
+      opts = [[2, 'safe'], [3, 'moderate']];
+      if (v !== 'low') opts.push([4, 'intense']);
+    } else if (sp === 'upperlower') {
+      opts = [[4, 'moderate']];
+      if (v !== 'low') { opts.push([5, 'intense']); if (v === 'high') opts.push([6, 'danger']); }
+    } else {
+      opts = [[3, 'moderate'], [4, 'intense']];
+      if (v !== 'low') { opts.push([5, 'intense']); if (v === 'high') opts.push([6, 'danger']); }
+    }
+    const tags = { safe: 'Confortable', moderate: 'Équilibré', intense: 'Exigeant', danger: 'Très exigeant' };
+    return `
+      ${steps(4)}
+      <div class="eyebrow">Étape 4 — Fréquence</div>
+      <h1 class="h1">Combien de<br>fois / semaine ?</h1>
+      <p class="lead">La régularité bat l'intensité. Choisis ce que tu peux tenir.</p>
+      <div class="stack">
+        ${opts.map(([d, t]) => card({
+          tone: t, chip: tags[t], meta: perSession(d),
+          title: `${d} séances`, desc: `${SPLIT[sp]} · ${VOL[v].label} séries / muscle / semaine`,
+          on: `pickFreq(${d})`
+        })).join('')}
+      </div>
+      ${note('À savoir', 'Peu de longues séances ou beaucoup de courtes : même résultat si <b>le volume hebdo reste identique</b>.')}`;
+  },
+
+  rpe() {
+    const r = rpeData();
+    const cols = ['#4aa97f','#7cc28a','#b4d26f','#e6d35a','#f4b54c','#f08a45','#e8603f','#d94049','#b9314f','#8d1b3b'];
+    const bars = cols.map((c, i) => {
+      const n = i + 1, on = n >= Math.floor(r.min) && n <= Math.ceil(r.max);
+      return `<div class="rpe-bar ${on ? 'on' : 'off'}" style="height:${30 + n * 7}%;background:${c}"></div>`;
+    }).join('');
+    const t = levelTone();
+    return `
+      <div class="eyebrow">Presque fini — Intensité</div>
+      <h1 class="h1">Ton RPE<br>cible</h1>
+      <p class="lead">À quel point chaque série doit être difficile, sur 10.</p>
+      <div class="glass card t-${t}" style="min-height:0;padding:22px">
+        ${blobs}
+        <div class="card-top" style="margin-bottom:14px"><span class="chip">${r.label}</span><span class="meta">${r.rir}</span></div>
+        <div class="dots" style="font-size:3.4rem;line-height:1">RPE ${r.min}–${r.max}</div>
+        <div class="inset" style="margin-top:18px">
+          <div class="rpe-bars">${bars}</div>
+          <div class="rpe-n">${cols.map((_, i) => `<span>${i + 1}</span>`).join('')}</div>
+        </div>
+        <p style="margin-top:16px;max-width:none">${r.exp}</p>
+      </div>
+      <div class="glass card t-neutral" style="min-height:0;padding:20px;margin-top:14px">
+        ${blobs}
+        <div class="stats" style="margin-top:0">
+          <div class="stat"><div class="k">Volume</div><div class="v dots">${VOL[S.volume].label}</div></div>
+          <div class="stat"><div class="k">Séances</div><div class="v dots">${S.frequency}×</div></div>
+          <div class="stat"><div class="k">Split</div><div class="v" style="font-size:.95rem;font-weight:700;line-height:1.15">${SPLIT[S.split]}</div></div>
+        </div>
+      </div>`;
+  },
+
+  program() {
+    const p = generateProgram(), r = rpeData(), t = levelTone();
+    return `
+      <div class="eyebrow">Programme généré ✓</div>
+      <div class="glass card t-${t}" style="min-height:0;padding:24px">
+        ${blobs}
+        <div class="card-top" style="margin-bottom:22px"><span class="chip">${LV[S.level].label}</span><span class="meta">RPE ${r.min}–${r.max}</span></div>
+        <h3 style="font-size:2.4rem">${SPLIT[S.split]}</h3>
+        <div class="inset stats">
+          <div class="stat"><div class="k">Séries / muscle</div><div class="v dots">${VOL[S.volume].label}</div></div>
+          <div class="stat"><div class="k">Séances / sem.</div><div class="v dots">${S.frequency}</div></div>
+          <div class="stat"><div class="k">Séries / exo</div><div class="v dots">${VOL[S.volume].sets}</div></div>
+        </div>
+      </div>
+      <div class="eyebrow" style="margin-top:26px">Ta semaine — touche pour dérouler</div>
+      <div class="stack">
+        ${p.map((d, i) => `
+          <div class="glass card day t-${d.tone || t} ${i === 0 ? 'open' : ''}" id="day-${i}">
+            ${blobs}
+            <button class="day-head" onclick="document.getElementById('day-${i}').classList.toggle('open')">
+              <span class="dots">J${i + 1}</span>
+              <span class="nm">${d.name}</span>
+              <span class="chev">${ICON.chev}</span>
+            </button>
+            <div class="day-body"><div><div class="ex-list">
+              ${d.ex.map(e => `
+                <div class="inset ex">
+                  <span class="l">${e[0]}</span>
+                  <span class="n">${e[1]}</span>
+                  <div class="r"><span class="dots">${VOL[S.volume].sets} × ${e[2]}</span><em>RPE ${r.min}</em></div>
+                </div>`).join('')}
+            </div></div></div>
+          </div>`).join('')}
+      </div>
+      ${note('Clé de la progression', '<b>Surcharge progressive</b> : ajoute charge, reps ou séries chaque semaine si possible. Repos 2–3 min sur les composés, 60–90 s sur l\'isolation. Protéines : 1,6–2,2 g/kg.')}`;
+  },
+};
+
+// ─── DOCKS ────────────────────────────────────────────
+const DOCKS = {
+  hero: () => dockPill('Commencer', "go('level')"),
+  arnold: () => dockPill('Recommencer pour de vrai', 'restart()', ICON.reset),
+  game_over: () => dockPill('Recommencer — sans checkpoint', 'restart()', ICON.reset),
+  rpe: () => dockPill('Générer mon programme', "go('program')", ICON.spark),
+  program: () => dockPill('Nouveau programme', 'restart()', ICON.reset),
+};
+
+// ─── ACTIONS ──────────────────────────────────────────
+function pickLevel(l) { S.level = l === 'arnold' ? null : l; go(l === 'arnold' ? 'arnold' : 'volume'); }
+function pickVolume(v) { S.volume = v; go((v !== 'low' && S.level === 'beginner') ? 'volume_warning' : 'split'); }
+function dangerChoice(c) { if (c === 'ignore') go('game_over'); else { S.volume = 'low'; go('split'); } }
+function pickSplit(s) { S.split = s; go('frequency'); }
+function pickFreq(d) { S.frequency = d; go('rpe'); }
+
+function perSession(days) {
+  const [a, b] = VOL[S.volume].r;
+  const f = x => (Math.round(x / days * 10) / 10).toString().replace('.', ',');
+  return `≈ ${f(a)}–${f(b)} / séance`;
+}
+
+function rpeData() {
+  if (S.volume === 'low') {
+    if (S.level === 'beginner') return { min: 7, max: 7.5, rir: '~3 reps en réserve', label: 'Effort conservateur', exp: 'Loin de l\'échec. Parfait pour construire la technique sans te blesser.' };
+    return { min: 9, max: 10, rir: '0–1 rep en réserve', label: 'Effort élevé', exp: 'Proche de l\'échec. Peu de séries : chacune doit compter.' };
+  }
+  if (S.volume === 'medium') return { min: 7.5, max: 8.5, rir: '~2 reps en réserve', label: 'Effort modéré', exp: 'Assez de stimulus sans accumuler trop de fatigue.' };
+  return { min: 7, max: 7.5, rir: '~3 reps en réserve', label: 'Effort conservateur', exp: 'Volume élevé : c\'est la quantité de travail qui fournit le stimulus.' };
+}
+
+// ─── PROGRAM GENERATOR ────────────────────────────────
+const DAYS = {
+  Push:  { name: 'Push — Pectoraux, Épaules, Triceps', ex: [['A','Développé couché','6'],['B','Développé incliné','8'],['C','Développé militaire haltères','8/côté'],['D','Écartés poulie / Pec deck','12'],['E','Extension triceps corde','12']] },
+  Pull:  { name: 'Pull — Dos, Biceps', ex: [['A','Tractions (lest ou élastique)','6'],['B','Rowing barre penché','6'],['C','Rowing poulie assis','10'],['D','Face pull corde','15'],['E','Curl marteau haltères','10']] },
+  Legs:  { name: 'Jambes — Quadris, Ischios, Fessiers, Mollets', ex: [['A','Squat barre','6'],['B','Soulevé de terre roumain','8'],['C','Presse à cuisses','10'],['D','Leg curl machine','12'],['E','Mollets debout','15']] },
+  Upper: { name: 'Haut du corps — Pecs, Dos, Épaules, Bras', ex: [['A','Développé couché','6'],['B','Tractions (lest ou élastique)','6'],['C','Développé militaire haltères','8/côté'],['D','Rowing barre penché','6'],['E1','Extension triceps poulie','12'],['E2','Curl marteau haltères','12']] },
+  Lower: { name: 'Bas du corps — Quadris, Ischios, Fessiers, Mollets', ex: [['A','Squat barre','6'],['B','Soulevé de terre roumain','8'],['C','Presse à cuisses','10'],['D','Leg curl machine','12'],['E','Mollets debout','15']] },
+  Full:  { name: 'Full Body', ex: [['A','Squat barre','6'],['B','Développé couché','6'],['C','Tractions (lest ou élastique)','6'],['D1','High pull haltères','8'],['D2','Développé militaire haltères','8/côté'],['E','Soulevé de terre roumain','8']] },
+};
+
+function generateProgram() {
+  const f = S.frequency;
+  let order;
+  if (S.split === 'ppl') order = ['Push','Pull','Legs','Push','Pull','Legs'].slice(0, f);
+  else if (S.split === 'upperlower') order = ['Upper','Lower','Upper','Lower','Upper','Lower'].slice(0, f);
+  else order = Array(f).fill('Full');
+  return order.map((k, i) => ({
+    name: k === 'Full' ? `Full Body — Séance ${i + 1}` : DAYS[k].name,
+    ex: DAYS[k].ex,
+  }));
+}
+
+load();
+render();
+</script>
+</body>
+</html>
